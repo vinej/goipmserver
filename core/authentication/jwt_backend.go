@@ -1,18 +1,20 @@
 package authentication
 
 import (
-	"api.jwt.auth/core/redis"
-	"api.jwt.auth/services/models"
-	"api.jwt.auth/settings"
+	"goipmserver/core/redis"
+	"goipmserver/services/models"
+	"goipmserver/settings"
 	"bufio"
-	"github.com/pborman/uuid"
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
 	jwt "github.com/dgrijalva/jwt-go"
-	"golang.org/x/crypto/bcrypt"
 	"os"
 	"time"
+	//"log"
+	"fmt"
+	"golang.org/x/crypto/bcrypt"
+	"github.com/pborman/uuid"
 )
 
 type JWTAuthenticationBackend struct {
@@ -82,6 +84,8 @@ func (backend *JWTAuthenticationBackend) Logout(tokenString string, token *jwt.T
 }
 
 func (backend *JWTAuthenticationBackend) IsInBlacklist(token string) bool {
+	return false
+	/*
 	redisConn := redis.Connect()
 	redisToken, _ := redisConn.GetValue(token)
 
@@ -90,9 +94,11 @@ func (backend *JWTAuthenticationBackend) IsInBlacklist(token string) bool {
 	}
 
 	return true
+	*/
 }
 
 func getPrivateKey() *rsa.PrivateKey {
+	fmt.Printf("load private key : %s\n", settings.Get().PrivateKeyPath)
 	privateKeyFile, err := os.Open(settings.Get().PrivateKeyPath)
 	if err != nil {
 		panic(err)

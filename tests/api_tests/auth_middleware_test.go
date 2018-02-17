@@ -1,10 +1,10 @@
 package api_tests
 
 import (
-	"api.jwt.auth/core/authentication"
-	"api.jwt.auth/routers"
-	"api.jwt.auth/services"
-	"api.jwt.auth/settings"
+	"goipmserver/core/authentication"
+	"goipmserver/routers"
+	"goipmserver/services"
+	"goipmserver/settings"
 	"fmt"
 	"github.com/codegangsta/negroni"
 	"github.com/stretchr/testify/assert"

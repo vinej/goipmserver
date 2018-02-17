@@ -1,9 +1,9 @@
 package services
 
 import (
-	"api.jwt.auth/api/parameters"
-	"api.jwt.auth/core/authentication"
-	"api.jwt.auth/services/models"
+	"goipmserver/api/parameters"
+	"goipmserver/core/authentication"
+	"goipmserver/services/models"
 	"encoding/json"
 	jwt "github.com/dgrijalva/jwt-go"
 	request "github.com/dgrijalva/jwt-go/request"
@@ -11,6 +11,22 @@ import (
 )
 
 func Login(requestUser *models.User) (int, []byte) {
+	authBackend := authentication.InitJWTAuthenticationBackend()
+
+	if authBackend.Authenticate(requestUser) {
+		token, err := authBackend.GenerateToken(requestUser.UUID)
+		if err != nil {
+			return http.StatusInternalServerError, []byte("")
+		} else {
+			response, _ := json.Marshal(parameters.TokenAuthentication{token})
+			return http.StatusOK, response
+		}
+	}
+
+	return http.StatusUnauthorized, []byte("")
+}
+
+func Register(requestUser *models.User) (int, []byte) {
 	authBackend := authentication.InitJWTAuthenticationBackend()
 
 	if authBackend.Authenticate(requestUser) {

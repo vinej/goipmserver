@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	//"flag"
 )
 
 var environments = map[string]string{
@@ -13,16 +14,21 @@ var environments = map[string]string{
 	"tests":         "../../settings/tests.json",
 }
 
+const keyMongoHost = "MONGOHOST"
+const keyMongoDatabase = "MONGODB"
+
 type Settings struct {
 	PrivateKeyPath     string
 	PublicKeyPath      string
 	JWTExpirationDelta int
+	MongoHost string
+	MongoDatabase string
 }
 
-var settings Settings = Settings{}
+var settings Settings
 var env = "preproduction"
 
-func Init() {
+func init() {
 	env = os.Getenv("GO_ENV")
 	if env == "" {
 		fmt.Println("Warning: Setting preproduction environment due to lack of GO_ENV value")
@@ -41,16 +47,21 @@ func LoadSettingsByEnv(env string) {
 	if jsonErr != nil {
 		fmt.Println("Error while parsing config file", jsonErr)
 	}
+	settings.MongoHost = getEnv("localhost", keyMongoHost)
+	settings.MongoDatabase = getEnv("restdb", keyMongoDatabase)
 }
 
-func GetEnvironment() string {
-	return env
+func getEnv(defaultVal string, key string) string {
+	v := os.Getenv(key)
+	if v != "" {
+		return v
+	} else {
+		fmt.Printf("Warning: Environment variable %s is not set, using default value: %s\n", key, defaultVal)
+		return defaultVal
+	}
 }
 
 func Get() Settings {
-	if &settings == nil {
-		Init()
-	}
 	return settings
 }
 

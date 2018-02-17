@@ -1,14 +1,15 @@
 package routers
 
 import (
-	"api.jwt.auth/controllers"
-	"api.jwt.auth/core/authentication"
+	"goipmserver/controllers"
+	"goipmserver/core/authentication"
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 )
 
 func SetAuthenticationRoutes(router *mux.Router) *mux.Router {
 	router.HandleFunc("/token-auth", controllers.Login).Methods("POST")
+	router.HandleFunc("/register", controllers.Register).Methods("POST")
 	router.Handle("/refresh-token-auth",
 		negroni.New(
 			negroni.HandlerFunc(authentication.RequireTokenAuthentication),

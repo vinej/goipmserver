@@ -1,20 +1,24 @@
 package unit_tests
 
 import (
-	"api.jwt.auth/services"
-	"api.jwt.auth/services/models"
-	"api.jwt.auth/settings"
+	"goipmserver/services"
+	"goipmserver/services/models"
+	"goipmserver/settings"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/stretchr/testify/assert"
 	. "gopkg.in/check.v1"
 	"net/http"
 	"os"
 	"testing"
+	"goipmserver/core/authentication"
+	"golang.org/x/crypto/nacl/auth"
 )
 
+/*
 func Test(t *testing.T) {
 	TestingT(t)
 }
+*/
 
 type AuthenticationServicesTestSuite struct{}
 

@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"api.jwt.auth/services"
-	"api.jwt.auth/services/models"
+	"goipmserver/services"
+	"goipmserver/services/models"
 	"encoding/json"
 	"net/http"
 )
@@ -13,6 +13,17 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	decoder.Decode(&requestUser)
 
 	responseStatus, token := services.Login(requestUser)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(responseStatus)
+	w.Write(token)
+}
+
+func Register(w http.ResponseWriter, r *http.Request) {
+	requestUser := new(models.User)
+	decoder := json.NewDecoder(r.Body)
+	decoder.Decode(&requestUser)
+
+	responseStatus, token := services.Register(requestUser)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(responseStatus)
 	w.Write(token)

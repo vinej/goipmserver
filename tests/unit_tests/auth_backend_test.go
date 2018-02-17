@@ -1,10 +1,10 @@
 package unit_tests
 
 import (
-	"api.jwt.auth/core/authentication"
-	"api.jwt.auth/core/redis"
-	"api.jwt.auth/services/models"
-	"api.jwt.auth/settings"
+	"goipmserver/core/authentication"
+	"goipmserver/core/redis"
+	"goipmserver/services/models"
+	"goipmserver/settings"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/stretchr/testify/assert"
 	. "gopkg.in/check.v1"
@@ -19,7 +19,7 @@ func Test(t *testing.T) {
 type AuthenticationBackendTestSuite struct{}
 
 var _ = Suite(&AuthenticationBackendTestSuite{})
-var t *testing.T
+//var t *testing.T
 
 func (s *AuthenticationBackendTestSuite) SetUpSuite(c *C) {
 	os.Setenv("GO_ENV", "tests")
