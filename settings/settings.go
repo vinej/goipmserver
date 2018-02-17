@@ -29,6 +29,10 @@ var settings Settings
 var env = "preproduction"
 
 func init() {
+	ReInit()
+}
+
+func ReInit() {
 	env = os.Getenv("GO_ENV")
 	if env == "" {
 		fmt.Println("Warning: Setting preproduction environment due to lack of GO_ENV value")

@@ -15,6 +15,7 @@ var (
 func init() {
 	allValidators = make(map[string]validator)
 	allValidators[models.CompanyCollectionName] = models.ValidateCompany
+	allValidators[models.UserCollectionName] = models.ValidateUser
 }
 
 func Validate(collection string, data interface{}) (string, bool) {

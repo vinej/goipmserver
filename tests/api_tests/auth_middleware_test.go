@@ -4,7 +4,7 @@ import (
 	"goipmserver/core/authentication"
 	"goipmserver/routers"
 	"goipmserver/services"
-	"goipmserver/settings"
+	//"goipmserver/settings"
 	"fmt"
 	"github.com/codegangsta/negroni"
 	"github.com/stretchr/testify/assert"
@@ -13,7 +13,13 @@ import (
 	"net/http/httptest"
 	"os"
 	"testing"
+	"goipmserver/settings"
 )
+
+func init()  {
+	os.Setenv("GO_ENV", "tests")
+	settings.ReInit()
+}
 
 func Test(t *testing.T) {
 	TestingT(t)
@@ -27,13 +33,12 @@ var token string
 var server *negroni.Negroni
 
 func (s *MiddlewaresTestSuite) SetUpSuite(c *C) {
-	os.Setenv("GO_ENV", "tests")
-	settings.Init()
+
 }
 
 func (s *MiddlewaresTestSuite) SetUpTest(c *C) {
 	authBackend := authentication.InitJWTAuthenticationBackend()
-	assert.NotNil(t, authBackend)
+	//assert.NotNil(t, authBackend)
 	token, _ = authBackend.GenerateToken("1234")
 
 	router := routers.InitRoutes()

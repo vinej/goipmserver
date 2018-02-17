@@ -8,13 +8,25 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	request "github.com/dgrijalva/jwt-go/request"
 	"net/http"
+	"gopkg.in/mgo.v2/bson"
+	//"os/user"
+	//"os/user"
 )
 
 func Login(requestUser *models.User) (int, []byte) {
 	authBackend := authentication.InitJWTAuthenticationBackend()
 
-	if authBackend.Authenticate(requestUser) {
-		token, err := authBackend.GenerateToken(requestUser.UUID)
+	searchResults, searchError := SearchCollection("users", bson.M{ "user": requestUser.User},0,1)
+	if searchError != "" {
+		return http.StatusUnauthorized, []byte(searchError)
+	}
+	testUser, err := models.GetUser(searchResults[0])
+	if err != "" {
+		return http.StatusUnauthorized, []byte(err)
+	}
+
+	if authBackend.Authenticate(requestUser, &testUser ) {
+		token, err := authBackend.GenerateToken(requestUser.User)
 		if err != nil {
 			return http.StatusInternalServerError, []byte("")
 		} else {
@@ -28,23 +40,14 @@ func Login(requestUser *models.User) (int, []byte) {
 
 func Register(requestUser *models.User) (int, []byte) {
 	authBackend := authentication.InitJWTAuthenticationBackend()
-
-	if authBackend.Authenticate(requestUser) {
-		token, err := authBackend.GenerateToken(requestUser.UUID)
-		if err != nil {
-			return http.StatusInternalServerError, []byte("")
-		} else {
-			response, _ := json.Marshal(parameters.TokenAuthentication{token})
-			return http.StatusOK, response
-		}
-	}
-
-	return http.StatusUnauthorized, []byte("")
+	requestUser.Password = string(authBackend.Register(requestUser))
+	InsertCollection("users", requestUser)
+	return http.StatusOK, []byte("")
 }
 
 func RefreshToken(requestUser *models.User) []byte {
 	authBackend := authentication.InitJWTAuthenticationBackend()
-	token, err := authBackend.GenerateToken(requestUser.UUID)
+	token, err := authBackend.GenerateToken(requestUser.User)
 	if err != nil {
 		panic(err)
 	}

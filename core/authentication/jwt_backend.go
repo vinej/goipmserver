@@ -12,9 +12,12 @@ import (
 	"os"
 	"time"
 	//"log"
-	"fmt"
+	//"fmt"
 	"golang.org/x/crypto/bcrypt"
-	"github.com/pborman/uuid"
+	//"github.com/pborman/uuid"
+	//"gopkg.in/mgo.v2/bson"
+	//"goipmserver/services"
+	//"os/user"
 )
 
 type JWTAuthenticationBackend struct {
@@ -55,16 +58,14 @@ func (backend *JWTAuthenticationBackend) GenerateToken(userUUID string) (string,
 	return tokenString, nil
 }
 
-func (backend *JWTAuthenticationBackend) Authenticate(user *models.User) bool {
-	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("testing"), 10)
+func (backend *JWTAuthenticationBackend) Authenticate(user *models.User, testUser *models.User ) bool {
+	//hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("testing"), 10)
+	return user.User == testUser.User && bcrypt.CompareHashAndPassword([]byte(testUser.Password), []byte(user.Password)) == nil
+}
 
-	testUser := models.User{
-		UUID:     uuid.New(),
-		Username: "haku",
-		Password: string(hashedPassword),
-	}
-
-	return user.Username == testUser.Username && bcrypt.CompareHashAndPassword([]byte(testUser.Password), []byte(user.Password)) == nil
+func (backend *JWTAuthenticationBackend) Register(user *models.User) []byte {
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
+	return hashedPassword
 }
 
 func (backend *JWTAuthenticationBackend) getTokenRemainingValidity(timestamp interface{}) int {
@@ -98,7 +99,6 @@ func (backend *JWTAuthenticationBackend) IsInBlacklist(token string) bool {
 }
 
 func getPrivateKey() *rsa.PrivateKey {
-	fmt.Printf("load private key : %s\n", settings.Get().PrivateKeyPath)
 	privateKeyFile, err := os.Open(settings.Get().PrivateKeyPath)
 	if err != nil {
 		panic(err)
