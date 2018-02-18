@@ -23,10 +23,15 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	decoder.Decode(&requestUser)
 
-	responseStatus, token := services.Register(requestUser)
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(responseStatus)
-	w.Write(token)
+	if err := requestUser.Validate(); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+	} else {
+		responseStatus, token := services.Register(requestUser)
+		w.WriteHeader(responseStatus)
+		w.Write(token)
+	}
 }
 
 func RefreshToken(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

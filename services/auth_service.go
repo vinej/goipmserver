@@ -20,9 +20,10 @@ func Login(requestUser *models.User) (int, []byte) {
 	if searchError != "" {
 		return http.StatusUnauthorized, []byte(searchError)
 	}
-	testUser, err := models.GetUser(searchResults[0])
-	if err != "" {
-		return http.StatusUnauthorized, []byte(err)
+	var testUser models.User
+	err := models.SetStruct(searchResults[0], &testUser)
+	if err != nil {
+		return http.StatusUnauthorized, []byte(err.Error())
 	}
 
 	if authBackend.Authenticate(requestUser, &testUser ) {

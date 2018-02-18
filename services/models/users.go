@@ -2,7 +2,7 @@ package models
 
 import (
 	"gopkg.in/mgo.v2/bson"
-	"fmt"
+	"errors"
 )
 
 const UserCollectionName = "users"
@@ -16,21 +16,20 @@ type User struct {
 	RegisterOn  string `json:"register_on"`
 }
 
-func GetUser(data interface{}) (user User, err string) {
-	var tuser User
-	terr := SetStruct(data, &tuser)
-	fmt.Println(tuser.User)
-	return tuser, terr
+func (user *User) Validate() error {
+	if user.User == "" {
+		return errors.New("user can't be empty")
+	}
+	return nil
 }
 
-func ValidateUser(data interface{}) (string, bool) {
-	user, err := GetUser(data)
-	if err != "" {
-		return err, false
+func ValidateUser(data interface{}) (out interface{}, err error) {
+	var user User
+	err = SetStruct(data, &user)
+	if err != nil {
+		return user, err
 	}
-	if user.User == "" {
-		return "user can't be empty", false
-	}
-	return "ok", true
+	err = user.Validate()
+	return user, err
 }
 

@@ -5,7 +5,7 @@ import (
 	"goipmserver/services/models"
 )
 
-type validator func (interface{}) (string, bool)
+type validator func (interface{}) (interface{}, error)
 
 var (
 	allValidators map[string]validator
@@ -14,11 +14,11 @@ var (
 
 func init() {
 	allValidators = make(map[string]validator)
-	allValidators[models.CompanyCollectionName] = models.ValidateCompany
+	allValidators[models.CompanyCollectionName] = models.VaidateCompany
 	allValidators[models.UserCollectionName] = models.ValidateUser
 }
 
-func Validate(collection string, data interface{}) (string, bool) {
+func Validate(collection string, data interface{}) (out interface{}, err error) {
 	var v = allValidators[collection]
 	return v(data)
 }

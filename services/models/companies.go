@@ -2,23 +2,37 @@ package models
 
 import (
 	"gopkg.in/mgo.v2/bson"
+	"errors"
 )
 
-type Company struct {
+type TBase interface {
+	Validate() (string bool)
+}
+
+type Base struct {
 	ID			bson.ObjectId `bson:"_id,omitempty"`
+}
+
+type Company struct {
+	ID			Base
 	Name 		string
 }
 
 const CompanyCollectionName = "companies"
 
-func ValidateCompany(data interface{}) (string, bool) {
-	var cie Company
-	err := SetStruct(data, &cie)
-	if err != "" {
-		return err, false
+func (company *Company) Validate() error {
+ 	if company.Name == "" {
+		return errors.New("invalid field content <name>")
 	}
- 	if cie.Name == "" {
-		return "invalid field content <name>", false
+	return nil
+}
+
+func VaidateCompany(data interface{}) (out interface{}, err error) {
+	var company Company
+	err = SetStruct(data, &company)
+	if err != nil {
+		return company, err
 	}
-	return "ok", true
+	err = company.Validate()
+	return company, err
 }

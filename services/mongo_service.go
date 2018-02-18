@@ -3,6 +3,7 @@ package services
 import (
 	"gopkg.in/mgo.v2"
 	"goipmserver/settings"
+	"errors"
 )
 
 var (
@@ -57,18 +58,18 @@ func SearchCollection (collection string, q interface{}, skip int, limit int) (s
 	return searchResults, searchErr
 }
 
-func InsertCollection (collection string, data interface{}) (insertResult interface{}, insertError string) {
+func InsertCollection (collection string, data interface{}) error {
 	if !Exist(collection) {
-		return nil, "Invalid collection name : "+collection
+		return errors.New("Invalid collection name : "+collection)
 	}
 
-	err, ok := Validate(collection, data)
-	if !ok {
-		return nil, err
+	out, err := Validate(collection, data)
+	if err != nil {
+		return errors.New(err.Error())
 	}
 
 	cmd := func(c *mgo.Collection) error {
-		fn := c.Insert(data)
+		fn := c.Insert(out)
 		return fn
 	}
 
@@ -78,7 +79,7 @@ func InsertCollection (collection string, data interface{}) (insertResult interf
 
 	ierr := insert()
 	if ierr != nil {
-		insertError = "Database Error: " + ierr.Error()
+		return  errors.New("Database Error: " + ierr.Error())
 	}
-	return insertResult, insertError
+	return nil
 }

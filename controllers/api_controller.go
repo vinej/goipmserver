@@ -6,6 +6,7 @@ import (
 	"strings"
 	"github.com/gorilla/mux"
 	"goipmserver/services"
+	//"goipmserver/services/models"
 )
 
 type TSearch struct {
@@ -71,5 +72,21 @@ func GetHandler(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	vars := mux.Vars(r)
 	collection := vars["collection"]
 	get(w, collection,nil,0,100)
+}
+
+
+func PostHandler(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	vars := mux.Vars(r)
+	collection := vars["collection"]
+	var v interface{}
+	decoder := json.NewDecoder(r.Body)
+	decoder.Decode(&v)
+
+	err := services.InsertCollection(collection, v)
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	respondWithJSON(w,http.StatusOK, "ok" )
 }
 
