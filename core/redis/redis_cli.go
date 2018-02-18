@@ -1,5 +1,8 @@
 package redis
 
+/*
+package redis
+
 import (
 	"github.com/garyburd/redigo/redis"
 )
@@ -43,3 +46,4 @@ func (redisCli *RedisCli) SetValue(key string, value string, expiration ...inter
 func (redisCli *RedisCli) GetValue(key string) (interface{}, error) {
 	return redisCli.conn.Do("GET", key)
 }
+*/

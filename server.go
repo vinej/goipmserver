@@ -2,7 +2,6 @@ package main
 
 import (
 	"goipmserver/routers"
-	//"goipmserver/settings"
 	"github.com/codegangsta/negroni"
 	"net/http"
 )

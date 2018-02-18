@@ -1,5 +1,5 @@
 {
-  "PrivateKeyPath": "c:/Users/jyv/go/src/goipmserver/settings/keys/private_key",
-  "PublicKeyPath": "c:/Users/jyv/go/src/goipmserver/settings/keys/public_key.pub",
+  "PrivateKeyPath": "/Users/jean-yvesvinet/go/src/goipmserver/settings/keys/private_key",
+  "PublicKeyPath": "/Users/jean-yvesvinet/go/src/goipmserver/settings/keys/public_key.pub",
   "JWTExpirationDelta": 72
 }

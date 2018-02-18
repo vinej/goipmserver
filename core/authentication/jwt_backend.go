@@ -1,7 +1,7 @@
 package authentication
 
 import (
-	"goipmserver/core/redis"
+	//"goipmserver/core/redis"
 	"goipmserver/services/models"
 	"goipmserver/settings"
 	"bufio"
@@ -11,13 +11,8 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"os"
 	"time"
-	//"log"
-	//"fmt"
+	"errors"
 	"golang.org/x/crypto/bcrypt"
-	//"github.com/pborman/uuid"
-	//"gopkg.in/mgo.v2/bson"
-	//"goipmserver/services"
-	//"os/user"
 )
 
 type JWTAuthenticationBackend struct {
@@ -80,8 +75,9 @@ func (backend *JWTAuthenticationBackend) getTokenRemainingValidity(timestamp int
 }
 
 func (backend *JWTAuthenticationBackend) Logout(tokenString string, token *jwt.Token) error {
-	redisConn := redis.Connect()
-	return redisConn.SetValue(tokenString, tokenString, backend.getTokenRemainingValidity(token.Claims.(jwt.MapClaims)["exp"]))
+	//redisConn := redis.Connect()
+	//return redisConn.SetValue(tokenString, tokenString, backend.getTokenRemainingValidity(token.Claims.(jwt.MapClaims)["exp"]))
+	return errors.New("err")
 }
 
 func (backend *JWTAuthenticationBackend) IsInBlacklist(token string) bool {

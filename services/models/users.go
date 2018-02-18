@@ -2,16 +2,9 @@ package models
 
 import (
 	"gopkg.in/mgo.v2/bson"
-	"encoding/json"
+	"fmt"
 )
 
-/*
-type User struct {
-	UUID     string `json:"uuid" form:"-"`
-	Username string `json:"username" form:"username"`
-	Password string `json:"password" form:"password"`
-}
-*/
 const UserCollectionName = "users"
 
 type User struct {
@@ -23,25 +16,19 @@ type User struct {
 	RegisterOn  string `json:"register_on"`
 }
 
-func GetUser( data interface{}) (user User, err string) {
-	var usr User
-	byteData, error := json.Marshal(data)
-	if error != nil {
-		return usr, error.Error()
-	}
-	error = json.Unmarshal(byteData, &usr)
-	if error != nil {
-		return usr, error.Error()
-	}
-	return usr, ""
+func GetUser(data interface{}) (user User, err string) {
+	var tuser User
+	terr := SetStruct(data, &tuser)
+	fmt.Println(tuser.User)
+	return tuser, terr
 }
 
 func ValidateUser(data interface{}) (string, bool) {
-	usr, err := GetUser(data)
+	user, err := GetUser(data)
 	if err != "" {
 		return err, false
 	}
-	if usr.User == "" {
+	if user.User == "" {
 		return "user can't be empty", false
 	}
 	return "ok", true
