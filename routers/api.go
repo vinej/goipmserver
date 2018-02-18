@@ -10,7 +10,7 @@ import (
 func SetGetApiRoutes(router *mux.Router) *mux.Router {
 	router.Handle("/api/{collection}",
 		negroni.New(
-			negroni.HandlerFunc(authentication.RequireTokenAuthentication),
+			//negroni.HandlerFunc(authentication.RequireTokenAuthentication),
 			negroni.HandlerFunc(controllers.GetHandler),
 		)).Methods("GET")
 

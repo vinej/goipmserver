@@ -5,17 +5,23 @@ import (
 	"errors"
 )
 
-type TBase interface {
-	Validate() (string bool)
-}
-
-type Base struct {
-	ID			bson.ObjectId `bson:"_id,omitempty"`
-}
-
 type Company struct {
-	ID			Base
-	Name 		string
+	ID					bson.ObjectId `bson:"_id,omitempty"`
+	Name 				string
+	Code 				string
+	UpdatedDateOnServer string
+	IsSync				bool
+	UpdatedDate 		string
+	CreatedDate 		string
+	Address 			Address
+	Type 				string
+	UpdatedBy 			string
+	UpdatedByOnServer 	string
+	IsNew 				bool
+	IsDeleted 			bool
+	Version 			int
+	CreatedBy 			string
+	Order 				float64
 }
 
 const CompanyCollectionName = "companies"
