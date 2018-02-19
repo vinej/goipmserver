@@ -25,7 +25,7 @@ type ActivityHistory struct {
 	Order					float64
 }
 
-const ActivityHistoryCollectionName = "activities"
+const ActivityHistoryCollectionName = "activities_histories"
 
 func (activityHistory *ActivityHistory) Validate() error {
 	if activityHistory.Id == "" {

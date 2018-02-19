@@ -3,7 +3,9 @@ package models
 import "errors"
 
 type Role struct {
+	Id					string
 	Name				string
+	Desc				string
 	IsSync				bool
 	ExpectedCostByHour	string
 	UpdatedDate			string
@@ -11,16 +13,15 @@ type Role struct {
 	UpdatedBy			string
 	UpdatedByOnServer	string
 	IsNew				bool
-	Id					string
 	IsDeleted			bool
-	Desc				string
 	Version				int
 	RateByHour			float64
 	CreatedBy			string
 	Order				float64
 }
 
-const RoleectionName = "plans"
+
+const RoleCollectionName = "roles"
 
 func (role *Role) Validate() error {
 	if role.Id == "" {
@@ -29,7 +30,7 @@ func (role *Role) Validate() error {
 	return nil
 }
 
-func VaidateRolen(data interface{}) (out interface{}, err error) {
+func ValidateRole(data interface{}) (out interface{}, err error) {
 	var role Role
 	err = SetStruct(data, &role)
 	if err != nil {

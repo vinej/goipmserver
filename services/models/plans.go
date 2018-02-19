@@ -3,8 +3,11 @@ package models
 import "errors"
 
 type Plan struct {
-	updatedDateOnServer string
+	Id					string
+	Code				string
 	Name				string
+	Desc				string
+	UpdatedDateOnServer string
 	IsSync				bool
 	ExpectedMargin		float64
 	UpdatedDate			string
@@ -17,11 +20,8 @@ type Plan struct {
 	UpdatedBy			string
 	UpdatedByOnServer	string
 	IsNew				bool
-	Id					string
 	IsDeleted			bool
-	Desc				string
 	Status				string
-	Code				string
 	Version				int
 	InitialBudget		float64
 	Timezone			float64
@@ -37,7 +37,7 @@ func (plan *Plan) Validate() error {
 	return nil
 }
 
-func VaidatePlan(data interface{}) (out interface{}, err error) {
+func ValidatePlan(data interface{}) (out interface{}, err error) {
 	var plan Plan
 	err = SetStruct(data, &plan)
 	if err != nil {

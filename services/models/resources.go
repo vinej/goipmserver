@@ -3,29 +3,29 @@ package models
 import "errors"
 
 type Resource struct {
-	updatedDateOnServer	string
-	IsSync				bool
+	Id					string
+	Code				string
+	FirstName			string
+	LastName			string
 	Email				string
+	Company				string
+	UpdatedDateOnServer	string
+	IsSync				bool
 	UpdatedDate			string
 	CreatedDate 		string
 	Address				Address
-	LastName			string
 	Initial				string
 	WorkHoursByDay		float64
 	Telephone			string
 	UpdatedBy			string
 	UpdatedByOnServer	string
 	IsNew				bool
-	Id					string
 	IsDeleted			bool
 	Cost				float64
-	Code				string
 	WorkHoursByWeek		float64
 	Version				int
-	FirstName			string
 	CreatedBy			string
 	Order				float64
-	Company				string
 }
 
 const ResourceCollectionName = "Resources"
@@ -37,7 +37,7 @@ func (resource *Resource) Validate() error {
 	return nil
 }
 
-func VaidateResource(data interface{}) (out interface{}, err error) {
+func ValidateResource(data interface{}) (out interface{}, err error) {
 	var audit Resource
 	err = SetStruct(data, &audit)
 	if err != nil {

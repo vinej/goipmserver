@@ -9,7 +9,8 @@ type Company struct {
 	ID					bson.ObjectId `bson:"_id,omitempty"`
 	Name 				string
 	Code 				string
-	UpdatedDateOnServer string
+	UpdatedDateOnServer Timestamp `json:"updatedDateOnServer"`
+	/*
 	IsSync				bool
 	UpdatedDate 		string
 	CreatedDate 		string
@@ -22,6 +23,7 @@ type Company struct {
 	Version 			int
 	CreatedBy 			string
 	Order 				float64
+	*/
 }
 
 const CompanyCollectionName = "companies"

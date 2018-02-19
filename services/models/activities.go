@@ -5,13 +5,13 @@ import (
 )
 
 type Activity struct {
-	IsSync  			bool
-	TotalDuration 		float64
-	CreatedDate			string
-	BackupResource		string
-	IsNew				bool
 	Id					string
 	Code				string
+	IsSync  			bool
+	TotalDuration 		float64
+	CreatedDate			Timestamp
+	BackupResource		string
+	IsNew				bool
 	MinType				float64
 	MaxType				float64
 	TypeInfo			string
