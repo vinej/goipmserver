@@ -5,12 +5,10 @@ import (
 	"goipmserver/core/authentication"
 	"goipmserver/services/models"
 	"encoding/json"
-	jwt "github.com/dgrijalva/jwt-go"
-	request "github.com/dgrijalva/jwt-go/request"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go/request"
 	"net/http"
 	"gopkg.in/mgo.v2/bson"
-	//"os/user"
-	//"os/user"
 )
 
 func Login(requestUser *models.User) (int, []byte) {
