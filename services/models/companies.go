@@ -6,24 +6,14 @@ import (
 )
 
 type Company struct {
-	ID					bson.ObjectId `bson:"_id,omitempty"`
+	UUID				bson.ObjectId `bson:"_id,omitempty"`
+	System 				Base
 	Name 				string
 	Code 				string
-	UpdatedDateOnServer Timestamp `json:"updatedDateOnServer"`
-	/*
-	IsSync				bool
-	UpdatedDate 		string
-	CreatedDate 		string
 	Address 			Address
 	Type 				string
-	UpdatedBy 			string
-	UpdatedByOnServer 	string
-	IsNew 				bool
-	IsDeleted 			bool
 	Version 			int
-	CreatedBy 			string
 	Order 				float64
-	*/
 }
 
 const CompanyCollectionName = "companies"

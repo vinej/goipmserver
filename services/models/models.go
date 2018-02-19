@@ -16,6 +16,25 @@ type Address struct {
 	Country 	string
 }
 
+type Base struct {
+	Id					string
+	CreatedDate			Timestamp
+	CreatedBy			string
+	UpdatedDate 		Timestamp
+	UpdatedBy 			string
+	UpdatedDateOnServer	Timestamp
+	UpdatedByOnServer 	string
+	IsNew				bool
+	isDeleted			bool
+	IsSync  			bool
+	Order				float64
+	Version				int
+}
+
+type BaseSystem struct {
+	System Base
+}
+
 
 func SetStruct(data interface{}, v interface{}) error {
 	byteData, err := json.Marshal(data)

@@ -27,12 +27,32 @@ func SetGetQueryApiRoutes(router *mux.Router) *mux.Router {
 	return router
 }
 
-func SetPostyApiRoutes(router *mux.Router) *mux.Router {
+func SetPostApiRoutes(router *mux.Router) *mux.Router {
 	router.Handle("/api/{collection}",
 		negroni.New(
 			//negroni.HandlerFunc(authentication.RequireTokenAuthentication),
 			negroni.HandlerFunc(controllers.PostHandler),
 		)).Methods("POST")
+
+	return router
+}
+
+func SetPutApiRoutes(router *mux.Router) *mux.Router {
+	router.Handle("/api/{collection}",
+		negroni.New(
+			//negroni.HandlerFunc(authentication.RequireTokenAuthentication),
+			negroni.HandlerFunc(controllers.PutHandler),
+		)).Methods("PUT")
+
+	return router
+}
+
+func SetDeleteApiRoutes(router *mux.Router) *mux.Router {
+	router.Handle("/api/{collection}",
+		negroni.New(
+			//negroni.HandlerFunc(authentication.RequireTokenAuthentication),
+			negroni.HandlerFunc(controllers.DeleteHandler),
+		)).Methods("DELETE")
 
 	return router
 }

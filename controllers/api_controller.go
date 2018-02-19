@@ -90,3 +90,33 @@ func PostHandler(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) 
 	respondWithJSON(w,http.StatusOK, "ok" )
 }
 
+func PutHandler(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	vars := mux.Vars(r)
+	collection := vars["collection"]
+	var v interface{}
+	decoder := json.NewDecoder(r.Body)
+	decoder.Decode(&v)
+
+	err := services.UpdateCollection(collection, v)
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	respondWithJSON(w,http.StatusOK, "ok" )
+}
+
+func DeleteHandler(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	vars := mux.Vars(r)
+	collection := vars["collection"]
+	var v interface{}
+	decoder := json.NewDecoder(r.Body)
+	decoder.Decode(&v)
+
+	err := services.DeleteCollection(collection, v)
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	respondWithJSON(w,http.StatusOK, "ok" )
+}
+

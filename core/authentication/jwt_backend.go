@@ -101,7 +101,7 @@ func getPrivateKey() *rsa.PrivateKey {
 	}
 
 	pemfileinfo, _ := privateKeyFile.Stat()
-	var size int64 = pemfileinfo.Size()
+	var size = pemfileinfo.Size()
 	pembytes := make([]byte, size)
 
 	buffer := bufio.NewReader(privateKeyFile)
@@ -127,7 +127,7 @@ func getPublicKey() *rsa.PublicKey {
 	}
 
 	pemfileinfo, _ := publicKeyFile.Stat()
-	var size int64 = pemfileinfo.Size()
+	var size = pemfileinfo.Size()
 	pembytes := make([]byte, size)
 
 	buffer := bufio.NewReader(publicKeyFile)

@@ -1,37 +1,32 @@
 package models
 
-import "errors"
+import (
+	"errors"
+	"gopkg.in/mgo.v2/bson"
+)
 
 type Plan struct {
-	Id					string
+	UUID				bson.ObjectId `bson:"_id,omitempty"`
+	System 				Base
+
 	Code				string
 	Name				string
 	Desc				string
-	UpdatedDateOnServer string
-	IsSync				bool
 	ExpectedMargin		float64
-	UpdatedDate			string
-	CreatedDate			string
-	ScheduleEndDate		string
-	Risk				float64
-	ScheduleStartDate	string
-	Project				string
-	ContingencyBudget	float64
-	UpdatedBy			string
-	UpdatedByOnServer	string
-	IsNew				bool
-	IsDeleted			bool
-	Status				string
-	Version				int
+	ScheduleStartDate	Timestamp
+	ScheduleEndDate		Timestamp
 	InitialBudget		float64
+	ContingencyBudget	float64
+	Risk				float64
+	Status				string
 	Timezone			float64
-	CreatedBy			string
+	Project				string
 }
 
 const PlanCollectionName = "plans"
 
 func (plan *Plan) Validate() error {
-	if plan.Id == "" {
+	if plan.System.Id == "" {
 		return errors.New("invalid field content <name>")
 	}
 	return nil

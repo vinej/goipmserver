@@ -1,30 +1,23 @@
 package models
 
-import "errors"
+import (
+	"errors"
+	"gopkg.in/mgo.v2/bson"
+)
 
 type Audit struct {
-	UpdatedDateOnServer	string
-	IsSync				bool
-	UpdatedDate			string
-	CreatedDate			string
+	UUID				bson.ObjectId `bson:"_id,omitempty"`
+	System 				Base
 	ObjectName			string
-	UpdatedBy			string
-	UpdatedByOnServer	string
-	IsNew				bool
-	Id					string
-	IsDeleted			bool
-	AuditAction			string
-	Version				int
 	ObjectId			string
-	CreatedBy			string
-	Order				int
 	ObjectDate			string
+	AuditAction			string
 }
 
 const AuditCollectionName = "audits"
 
 func (audit *Audit) Validate() error {
-	if audit.Id == "" {
+	if audit.System.Id == "" {
 		return errors.New("invalid field content <name>")
 	}
 	return nil

@@ -8,7 +8,8 @@ import (
 const UserCollectionName = "users"
 
 type User struct {
-	ID			bson.ObjectId `bson:"_id,omitempty"`
+	UUID		bson.ObjectId `bson:"_id,omitempty"`
+	System      Base
 	User	 	string
 	Email       string
 	Password 	string

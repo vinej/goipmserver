@@ -1,30 +1,23 @@
 package models
 
-import "errors"
+import (
+	"errors"
+	"gopkg.in/mgo.v2/bson"
+)
 
 type Role struct {
-	Id					string
+	UUID				bson.ObjectId `bson:"_id,omitempty"`
+	System 				Base
 	Name				string
 	Desc				string
-	IsSync				bool
-	ExpectedCostByHour	string
-	UpdatedDate			string
-	CreatedDate			string
-	UpdatedBy			string
-	UpdatedByOnServer	string
-	IsNew				bool
-	IsDeleted			bool
-	Version				int
+	ExpectedCostByHour	float64
 	RateByHour			float64
-	CreatedBy			string
-	Order				float64
 }
-
 
 const RoleCollectionName = "roles"
 
 func (role *Role) Validate() error {
-	if role.Id == "" {
+	if role.System.Id == "" {
 		return errors.New("invalid field content <name>")
 	}
 	return nil
