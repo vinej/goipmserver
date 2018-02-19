@@ -2,13 +2,10 @@ package models
 
 import (
 	"errors"
-	"gopkg.in/mgo.v2/bson"
 )
 
 type Plan struct {
-	UUID				bson.ObjectId `bson:"_id,omitempty"`
-	System 				Base
-
+	Base
 	Code				string
 	Name				string
 	Desc				string
@@ -26,7 +23,7 @@ type Plan struct {
 const PlanCollectionName = "plans"
 
 func (plan *Plan) Validate() error {
-	if plan.System.Id == "" {
+	if plan.Id == "" {
 		return errors.New("invalid field content <name>")
 	}
 	return nil

@@ -2,12 +2,10 @@ package models
 
 import (
 	"errors"
-	"gopkg.in/mgo.v2/bson"
 )
 
 type ActivityHistory struct {
-	UUID				bson.ObjectId `bson:"_id,omitempty"`
-	System 				Base
+	Base
 	StartDate			Timestamp
 	EndDate				Timestamp
 	ResourceStart		string
@@ -19,7 +17,7 @@ type ActivityHistory struct {
 const ActivityHistoryCollectionName = "activities_histories"
 
 func (activityHistory *ActivityHistory) Validate() error {
-	if activityHistory.System.Id == "" {
+	if activityHistory.Id == "" {
 		return errors.New("invalid field content <name>")
 	}
 	return nil

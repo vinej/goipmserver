@@ -1,13 +1,11 @@
 package models
 
 import (
-	"gopkg.in/mgo.v2/bson"
 	"errors"
 )
 
 type Company struct {
-	UUID				bson.ObjectId `bson:"_id,omitempty"`
-	System 				Base
+	Base
 	Name 				string
 	Code 				string
 	Address 			Address
