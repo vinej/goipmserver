@@ -17,7 +17,6 @@ type Address struct {
 }
 
 type Base struct {
-	Id					string
 	CreatedDate			Timestamp
 	CreatedBy			string
 	UpdatedDate 		Timestamp
@@ -31,8 +30,8 @@ type Base struct {
 	Version				int
 }
 
-type BaseSystem struct {
-	System Base
+type BaseId struct {
+	Id string `bson:"_id" json:"_id"`
 }
 
 

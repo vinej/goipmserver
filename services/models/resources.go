@@ -2,11 +2,10 @@ package models
 
 import (
 	"errors"
-	"gopkg.in/mgo.v2/bson"
 )
 
 type Resource struct {
-	UUID				bson.ObjectId `bson:"_id,omitempty"`
+	Id					string `bson:"_id" json:"_id"`
 	System 				Base
 	Code				string
 	FirstName			string
@@ -22,7 +21,7 @@ type Resource struct {
 const ResourceCollectionName = "Resources"
 
 func (resource *Resource) Validate() error {
-	if resource.System.Id == "" {
+	if resource.Id == "" {
 		return errors.New("invalid field content <name>")
 	}
 	return nil

@@ -70,7 +70,7 @@ func InsertCollection (collection string, data interface{}) (results []interface
 		return nil, errors.New(err.Error())
 	}
 
-	var baseSystem models.BaseSystem
+	var baseSystem models.BaseId
 	serr := models.SetStruct(data, &baseSystem)
 	if serr != nil {
 		return  nil, errors.New("Database Error: " + serr.Error())
@@ -90,7 +90,7 @@ func InsertCollection (collection string, data interface{}) (results []interface
 		return  nil, errors.New("Database Error: " + ierr.Error())
 	}
 
-	return SearchCollection(collection, bson.M{ "system.id": baseSystem.System.Id },0,1)
+	return SearchCollection(collection, bson.M{ "_id": baseSystem.Id },0,1)
 }
 
 func UpdateCollection (collection string, data interface{}) (results []interface{}, err error) {
@@ -104,16 +104,16 @@ func UpdateCollection (collection string, data interface{}) (results []interface
 	}
 
 	// get the old document
-	var baseSystem models.BaseSystem
+	var baseSystem models.BaseId
 	serr := models.SetStruct(data, &baseSystem)
 	if serr != nil {
 		return  nil, errors.New("Database Error: " + serr.Error())
 	}
 
-	// MERGE/CONFILCT MANAGEMENT
+	// MERGE/CONFLIC MANAGEMENT
 
 	cmd := func(c *mgo.Collection) error {
-		fn := c.Update(bson.M{ "system.id": baseSystem.System.Id}, out)
+		fn := c.Update(bson.M{ "_id": baseSystem.Id}, out)
 		return fn
 	}
 
@@ -126,7 +126,7 @@ func UpdateCollection (collection string, data interface{}) (results []interface
 		return  nil,errors.New("Database Error: " + ierr.Error())
 	}
 
-	return SearchCollection(collection, bson.M{ "system.id": baseSystem.System.Id},0,1)
+	return SearchCollection(collection, bson.M{ "_id": baseSystem.Id},0,1)
 }
 
 func DeleteCollection (collection string, data interface{}) error {
@@ -135,14 +135,14 @@ func DeleteCollection (collection string, data interface{}) error {
 	}
 
 	// get the old document
-	var baseSystem models.BaseSystem
+	var baseSystem models.BaseId
 	serr := models.SetStruct(data, &baseSystem)
 	if serr != nil {
 		return  errors.New("Database Error: " + serr.Error())
 	}
 
 	cmd := func(c *mgo.Collection) error {
-		fn := c.Remove(bson.M{ "system.id": baseSystem.System.Id})
+		fn := c.Remove(bson.M{ "_id": baseSystem.Id})
 		return fn
 	}
 
@@ -152,10 +152,10 @@ func DeleteCollection (collection string, data interface{}) error {
 
 	ierr := remove()
 	if ierr != nil {
-		// note:if thedoc is already deletedmust return OK
-		// if errr.Error() == '...' {
-		//    return nil
-		// }
+		// note:if the doc is already deleted must return OK
+		if ierr.Error() == "not found" {
+		    return nil
+	    }
 		return  errors.New("Database Error: " + ierr.Error())
 	}
 	return nil

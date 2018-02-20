@@ -2,13 +2,12 @@ package models
 
 import (
 	"errors"
-	"gopkg.in/mgo.v2/bson"
 )
 
 const UserCollectionName = "users"
 
 type User struct {
-	UUID		bson.ObjectId `bson:"_id,omitempty"`
+	Id			string `bson:"_id" json:"_id"`
 	System 		Base
 	User	 	string
 	Email       string
