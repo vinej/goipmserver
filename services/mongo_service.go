@@ -37,37 +37,43 @@ func withCollection(collection string, s func(*mgo.Collection) error) error {
 	return s(c)
 }
 
-func SearchCollection (collection string, q interface{}, skip int, limit int) (searchResults []interface{}, searchErr string) {
+func SearchCollection (collection string, q interface{}, skip int, limit int) (results []interface{}, err error) {
 	if !Exist(collection) {
-		return nil, "Invalid collection name : "+collection
+		return nil, errors.New("Invalid collection name : "+collection)
 	}
 
 	query := func(c *mgo.Collection) error {
-		fn := c.Find(q).Skip(skip).Limit(limit).All(&searchResults)
+		fn := c.Find(q).Skip(skip).Limit(limit).All(&results)
 
 		if limit < 0 {
-			fn = c.Find(q).Skip(skip).All(&searchResults)
+			fn = c.Find(q).Skip(skip).All(&results)
 		}
 		return fn
 	}
 	search := func() error {
 		return withCollection(collection, query)
 	}
-	err := search()
-	if err != nil {
-		searchErr = "Database Error: " + err.Error()
+	serr := search()
+	if serr != nil {
+		err = errors.New("Database Error: " + serr.Error())
 	}
-	return searchResults, searchErr
+	return results, err
 }
 
-func InsertCollection (collection string, data interface{}) error {
+func InsertCollection (collection string, data interface{}) (results []interface{}, err error) {
 	if !Exist(collection) {
-		return errors.New("Invalid collection name : "+collection)
+		return nil, errors.New("Invalid collection name : "+collection)
 	}
 
 	out, err := Validate(collection, data)
 	if err != nil {
-		return errors.New(err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	var baseSystem models.BaseSystem
+	serr := models.SetStruct(data, &baseSystem)
+	if serr != nil {
+		return  nil, errors.New("Database Error: " + serr.Error())
 	}
 
 	cmd := func(c *mgo.Collection) error {
@@ -81,35 +87,33 @@ func InsertCollection (collection string, data interface{}) error {
 
 	ierr := insert()
 	if ierr != nil {
-		return  errors.New("Database Error: " + ierr.Error())
+		return  nil, errors.New("Database Error: " + ierr.Error())
 	}
-	return nil
+
+	return SearchCollection(collection, bson.M{ "system.id": baseSystem.System.Id },0,1)
 }
 
-func UpdateCollection (collection string, data interface{}) error {
+func UpdateCollection (collection string, data interface{}) (results []interface{}, err error) {
 	if !Exist(collection) {
-		return errors.New("Invalid collection name : "+collection)
+		return nil,errors.New("Invalid collection name : "+collection)
 	}
 
 	out, err := Validate(collection, data)
 	if err != nil {
-		return errors.New(err.Error())
+		return nil,errors.New(err.Error())
 	}
 
 	// get the old document
 	var baseSystem models.BaseSystem
 	serr := models.SetStruct(data, &baseSystem)
 	if serr != nil {
-		return  errors.New("Database Error: " + serr.Error())
+		return  nil, errors.New("Database Error: " + serr.Error())
 	}
 
-	searchResult, searchError:= SearchCollection(collection, bson.M{ "system.id": baseSystem.System.Id},0,1)
-	if searchError != "" {
-		return  errors.New("Database Error: " + searchError)
-	}
+	// MERGE/CONFILCT MANAGEMENT
 
 	cmd := func(c *mgo.Collection) error {
-		fn := c.Update(searchResult[0], out)
+		fn := c.Update(bson.M{ "system.id": baseSystem.System.Id}, out)
 		return fn
 	}
 
@@ -119,9 +123,10 @@ func UpdateCollection (collection string, data interface{}) error {
 
 	ierr := update()
 	if ierr != nil {
-		return  errors.New("Database Error: " + ierr.Error())
+		return  nil,errors.New("Database Error: " + ierr.Error())
 	}
-	return nil
+
+	return SearchCollection(collection, bson.M{ "system.id": baseSystem.System.Id},0,1)
 }
 
 func DeleteCollection (collection string, data interface{}) error {

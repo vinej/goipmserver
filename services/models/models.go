@@ -2,7 +2,6 @@ package models
 
 import (
 	"encoding/json"
-	"gopkg.in/mgo.v2/bson"
 )
 
 type Address struct {
@@ -18,7 +17,6 @@ type Address struct {
 }
 
 type Base struct {
-	UUID				bson.ObjectId `bson:"_id,omitempty"`
 	Id					string
 	CreatedDate			Timestamp
 	CreatedBy			string

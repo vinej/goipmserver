@@ -31,11 +31,11 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 }
 
 func get(w http.ResponseWriter, collection string, query interface{}, skip int, limit int) {
-	searchResults, searchErrors := services.SearchCollection(collection, query, skip, limit)
-	if searchErrors != "" {
-		respondWithError(w, http.StatusInternalServerError, searchErrors)
+	results, err := services.SearchCollection(collection, query, skip, limit)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
 	}
-	respondWithJSON(w,http.StatusOK, searchResults )
+	respondWithJSON(w,http.StatusOK, results )
 }
 
 func GetQueryHandler(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -82,12 +82,13 @@ func PostHandler(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) 
 	decoder := json.NewDecoder(r.Body)
 	decoder.Decode(&v)
 
-	err := services.InsertCollection(collection, v)
+	results, err := services.InsertCollection(collection, v)
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	respondWithJSON(w,http.StatusOK, "ok" )
+
+	respondWithJSON(w,http.StatusOK, results )
 }
 
 func PutHandler(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -97,12 +98,12 @@ func PutHandler(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	decoder.Decode(&v)
 
-	err := services.UpdateCollection(collection, v)
+	results, err := services.UpdateCollection(collection, v)
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	respondWithJSON(w,http.StatusOK, "ok" )
+	respondWithJSON(w,http.StatusOK, results )
 }
 
 func DeleteHandler(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -119,4 +120,3 @@ func DeleteHandler(w http.ResponseWriter, r *http.Request, next http.HandlerFunc
 	}
 	respondWithJSON(w,http.StatusOK, "ok" )
 }
-

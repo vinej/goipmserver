@@ -14,14 +14,14 @@ import (
 func Login(requestUser *models.User) (int, []byte) {
 	authBackend := authentication.InitJWTAuthenticationBackend()
 
-	searchResults, searchError := SearchCollection("users", bson.M{ "user": requestUser.User},0,1)
-	if searchError != "" {
-		return http.StatusUnauthorized, []byte(searchError)
-	}
-	var testUser models.User
-	err := models.SetStruct(searchResults[0], &testUser)
+	results, err := SearchCollection("users", bson.M{ "user": requestUser.User},0,1)
 	if err != nil {
 		return http.StatusUnauthorized, []byte(err.Error())
+	}
+	var testUser models.User
+	serr := models.SetStruct(results[0], &testUser)
+	if serr != nil {
+		return http.StatusUnauthorized, []byte(serr.Error())
 	}
 
 	if authBackend.Authenticate(requestUser, &testUser ) {

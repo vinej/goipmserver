@@ -2,10 +2,12 @@ package models
 
 import (
 	"errors"
+	"gopkg.in/mgo.v2/bson"
 )
 
 type Role struct {
-	Base
+	UUID				bson.ObjectId `bson:"_id,omitempty"`
+	System 				Base
 	Name				string
 	Desc				string
 	ExpectedCostByHour	float64
@@ -15,7 +17,7 @@ type Role struct {
 const RoleCollectionName = "roles"
 
 func (role *Role) Validate() error {
-	if role.Id == "" {
+	if role.System.Id == "" {
 		return errors.New("invalid field content <name>")
 	}
 	return nil

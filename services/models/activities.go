@@ -2,10 +2,16 @@ package models
 
 import (
 	"errors"
+	"gopkg.in/mgo.v2/bson"
 )
 
+type Document interface {
+	Validate() error
+}
+
 type Activity struct {
-	Base
+	UUID				bson.ObjectId `bson:"_id,omitempty"`
+	System 				Base
 	Code				string
 	Name 				string
 	FixeStartDate 		Timestamp
@@ -21,7 +27,7 @@ type Activity struct {
 const ActivityCollectionName = "activities"
 
 func (activity *Activity) Validate() error {
-	if activity.Id == "" {
+	if activity.System.Id == "" {
 		return errors.New("invalid field content <name>")
 	}
 	return nil
