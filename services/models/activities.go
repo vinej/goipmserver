@@ -41,3 +41,13 @@ func VaidateActivity(data interface{}) (out interface{}, err error) {
 	err = activity.Validate()
 	return activity, err
 }
+
+func PatchActivity(data interface{}, patches []Patches) (out interface{}, err error) {
+	var activity Activity
+	err = SetStruct(data, &activity)
+	if err != nil {
+		return activity, err
+	}
+	err = PatchStruct(activity, patches)
+	return activity, err
+}

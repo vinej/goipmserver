@@ -93,6 +93,7 @@ func InsertCollection (collection string, data interface{}) (results []interface
 	return SearchCollection(collection, bson.M{ "_id": baseSystem.Id },0,1)
 }
 
+
 func UpdateCollection (collection string, data interface{}) (results []interface{}, err error) {
 	if !Exist(collection) {
 		return nil,errors.New("Invalid collection name : "+collection)
@@ -159,4 +160,58 @@ func DeleteCollection (collection string, data interface{}) error {
 		return  errors.New("Database Error: " + ierr.Error())
 	}
 	return nil
+}
+
+// implementing the merge
+// need to know witch field is dirty and wath was the value before
+// so if the current value of the field in the server is not the same as the
+// previous version from the mobile and that mobile change this value we have a conflit
+// imple: the current record can keep track of all modification and send only thos moficiation to the server
+// collection name, id, list{ field : value }
+// like that we search the id, check for conflit and apply the modification
+// the latest modification win, but a notification
+// change by someone else.
+//
+// compare only
+//
+func PatchCollection (collection string, id string, data interface{}) (results []models.Conflict, err error) {
+	if !Exist(collection) {
+		return nil,errors.New("Invalid collection name : "+collection)
+	}
+
+	// get the old document
+	var patches []models.Patches
+	err = models.SetPatches(data, patches)
+	if err != nil {
+		return  nil, errors.New("Database Error: " + err.Error())
+	}
+
+	oldData, err := SearchCollection(collection, bson.M{ "_id": id},0,1)
+	out, err :=  Patch(collection, oldData, patches)
+	if err != nil {
+		return  nil, errors.New("Database Error: " + err.Error())
+	}
+
+	// conflicts must be saved into the database
+	conflicts, err := models.GetConflit(out, patches)
+	if err != nil {
+		return  nil,errors.New("Database Error: " + err.Error())
+	}
+
+	cmd := func(c *mgo.Collection) error {
+		fn := c.Update(bson.M{ "_id": id}, out)
+		return fn
+	}
+
+	update := func() error {
+		return withCollection(collection, cmd)
+	}
+
+	err = update()
+	if err != nil {
+		return  nil,errors.New("Database Error: " + err.Error())
+	}
+
+	// return the last version
+	return conflicts, nil
 }

@@ -120,3 +120,19 @@ func DeleteHandler(w http.ResponseWriter, r *http.Request, next http.HandlerFunc
 	}
 	respondWithJSON(w,http.StatusOK, "ok" )
 }
+
+func PatchHandler(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	vars := mux.Vars(r)
+	collection := vars["collection"]
+	id := vars["id"]
+	var v interface{}
+	decoder := json.NewDecoder(r.Body)
+	decoder.Decode(&v)
+
+	results, err := services.PatchCollection(collection, id, v)
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	respondWithJSON(w,http.StatusOK, results )
+}

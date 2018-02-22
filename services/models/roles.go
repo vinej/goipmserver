@@ -31,3 +31,13 @@ func ValidateRole(data interface{}) (out interface{}, err error) {
 	err = role.Validate()
 	return role, err
 }
+
+func PatchRole(data interface{}, patches []Patches) (out interface{}, err error) {
+	var role Role
+	err = SetStruct(data, &role)
+	if err != nil {
+		return role, err
+	}
+	err = PatchStruct(role, patches)
+	return role, err
+}

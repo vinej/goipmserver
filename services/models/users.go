@@ -33,3 +33,13 @@ func ValidateUser(data interface{}) (out interface{}, err error) {
 	return user, err
 }
 
+func PatchUser(data interface{}, patches []Patches) (out interface{}, err error) {
+	var user User
+	err = SetStruct(data, &user)
+	if err != nil {
+		return user, err
+	}
+	err = PatchStruct(user, patches)
+	return user, err
+}
+

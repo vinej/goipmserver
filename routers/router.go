@@ -13,5 +13,6 @@ func InitRoutes() *mux.Router {
 	router = SetPostApiRoutes(router)
 	router = SetPutApiRoutes(router)
 	router = SetDeleteApiRoutes(router)
+	router = SetPatchApiRoutes(router)
 	return router
 }

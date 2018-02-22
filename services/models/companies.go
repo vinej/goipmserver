@@ -36,3 +36,13 @@ func VaidateCompany(data interface{}) (out interface{}, err error) {
 	err = company.Validate()
 	return company, err
 }
+
+func PatchCompany(data interface{}, patches []Patches) (out interface{}, err error) {
+	var company Company
+	err = SetStruct(data, &company)
+	if err != nil {
+		return company, err
+	}
+	err = PatchStruct(company, patches)
+	return company, err
+}

@@ -31,3 +31,13 @@ func VaidateAudit(data interface{}) (out interface{}, err error) {
 	err = audit.Validate()
 	return audit, err
 }
+
+func PatchAudit(data interface{}, patches []Patches) (out interface{}, err error) {
+	var audit Audit
+	err = SetStruct(data, &audit)
+	if err != nil {
+		return audit, err
+	}
+	err = PatchStruct(audit, patches)
+	return audit, err
+}

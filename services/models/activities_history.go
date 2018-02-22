@@ -34,3 +34,13 @@ func VaidateActivityHistory(data interface{}) (out interface{}, err error) {
 	return activityHistory, err
 }
 
+func PatchActivityHistory(data interface{}, patches []Patches) (out interface{}, err error) {
+	var activityHistory ActivityHistory
+	err = SetStruct(data, &activityHistory)
+	if err != nil {
+		return activityHistory, err
+	}
+	err = PatchStruct(activityHistory, patches)
+	return activityHistory, err
+}
+

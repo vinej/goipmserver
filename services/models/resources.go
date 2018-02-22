@@ -28,11 +28,21 @@ func (resource *Resource) Validate() error {
 }
 
 func ValidateResource(data interface{}) (out interface{}, err error) {
-	var audit Resource
-	err = SetStruct(data, &audit)
+	var resource Resource
+	err = SetStruct(data, &resource)
 	if err != nil {
-		return audit, err
+		return resource, err
 	}
-	err = audit.Validate()
-	return audit, err
+	err = resource.Validate()
+	return resource, err
+}
+
+func PatchResource(data interface{}, patches []Patches) (out interface{}, err error) {
+	var resource Resource
+	err = SetStruct(data, &resource)
+	if err != nil {
+		return resource, err
+	}
+	err = PatchStruct(resource, patches)
+	return resource, err
 }

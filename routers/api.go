@@ -56,3 +56,13 @@ func SetDeleteApiRoutes(router *mux.Router) *mux.Router {
 
 	return router
 }
+
+func SetPatchApiRoutes(router *mux.Router) *mux.Router {
+	router.Handle("/api/{collection}/{id}",
+		negroni.New(
+			//negroni.HandlerFunc(authentication.RequireTokenAuthentication),
+			negroni.HandlerFunc(controllers.PatchHandler),
+		)).Methods("PATCH")
+
+	return router
+}

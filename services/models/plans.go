@@ -39,3 +39,13 @@ func ValidatePlan(data interface{}) (out interface{}, err error) {
 	err = plan.Validate()
 	return plan, err
 }
+
+func PatchPlan(data interface{}, patches []Patches) (out interface{}, err error) {
+	var plan Plan
+	err = SetStruct(data, &plan)
+	if err != nil {
+		return plan, err
+	}
+	err = PatchStruct(plan, patches)
+	return plan, err
+}
