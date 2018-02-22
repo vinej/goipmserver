@@ -93,6 +93,16 @@ func InsertCollection (collection string, data interface{}) (results []interface
 	return SearchCollection(collection, bson.M{ "_id": baseSystem.Id },0,1)
 }
 
+func insertFastCollection (collection string, data interface{}) error {
+	cmd := func(c *mgo.Collection) error {
+		fn := c.Insert(data)
+		return fn
+	}
+	insert := func() error {
+		return withCollection(collection, cmd)
+	}
+	return insert()
+}
 
 func UpdateCollection (collection string, data interface{}) (results []interface{}, err error) {
 	if !Exist(collection) {
@@ -110,8 +120,6 @@ func UpdateCollection (collection string, data interface{}) (results []interface
 	if serr != nil {
 		return  nil, errors.New("Database Error: " + serr.Error())
 	}
-
-	// MERGE/CONFLIC MANAGEMENT
 
 	cmd := func(c *mgo.Collection) error {
 		fn := c.Update(bson.M{ "_id": baseSystem.Id}, out)
@@ -196,6 +204,11 @@ func PatchCollection (collection string, id string, data interface{}) (results [
 	conflicts, err := models.GetConflit(out, patches)
 	if err != nil {
 		return  nil,errors.New("Database Error: " + err.Error())
+	}
+
+	cerr := insertFastCollection("conflicts", conflicts)
+	if cerr != nil {
+		return  nil,errors.New("Database Error: " + cerr.Error())
 	}
 
 	cmd := func(c *mgo.Collection) error {
