@@ -74,7 +74,6 @@ func GetConflit(data interface{}, patches []Patches) ( results []Conflict, err e
 	var conflits = []Conflict{}
 	for _,p := range patches{
 		value, _ := reflections.GetField(&data, p.Field)
-		fmt.Sprintf("%v", value)
 		c := Conflict{ FieldName : p.Ftype, ServerValue: fmt.Sprintf("%v", value), ClientValue: p.Value }
 		conflits = append(conflits, c )
 	}
